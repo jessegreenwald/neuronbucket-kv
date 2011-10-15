@@ -8,6 +8,6 @@ public interface KVStoreContext<K, V> {
 
     public void put(K key, V value) throws IOException;
 
-    public void remove(K key);
+    public void remove(K key) throws IOException;
 
 }

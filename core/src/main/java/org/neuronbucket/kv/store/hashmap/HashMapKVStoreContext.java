@@ -1,32 +1,35 @@
 package org.neuronbucket.kv.store.hashmap;
 
 import java.util.HashMap;
+import java.util.concurrent.locks.ReadWriteLock;
 
-import org.neuronbucket.kv.KVStoreContext;
+import org.neuronbucket.kv.AbstractKVStoreContext;
 
-class HashMapKVStoreContext<K, V> implements KVStoreContext<K, V> {
+class HashMapKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 
 	private HashMap<K, V> mStore;
 
-	public HashMapKVStoreContext(HashMap<K, V> store) {
+	public HashMapKVStoreContext(HashMapKVStore<K, V> parent, ReadWriteLock lock, HashMap<K, V> store) {
+		super(parent, lock);
 		mStore = store;
 	}
 
-	public V get(K key) {
+	protected V doGet(K key) throws java.io.IOException {
 		synchronized(mStore) {
 			return mStore.get(key);
 		}
 	}
 
-	public void put(K key, V value) {
+	protected void doPut(K key, V value) throws java.io.IOException {
 		synchronized(mStore) {
 			mStore.put(key, value);
 		}
 	}
 
-	public void remove(K key) {
+	protected void doRemove(K key) throws java.io.IOException {
 		synchronized(mStore) {
 			mStore.remove(key);
 		}
 	}
+
 }

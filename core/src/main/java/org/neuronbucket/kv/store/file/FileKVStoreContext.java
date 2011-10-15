@@ -5,22 +5,34 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.locks.ReadWriteLock;
 
-import org.neuronbucket.kv.KVStoreContext;
+import org.neuronbucket.kv.AbstractKVStoreContext;
 import org.neuronbucket.kv.util.StreamTransformer;
 import org.neuronbucket.kv.util.Transformer;
 
-public class FileKVStoreContext<K, V> implements KVStoreContext<K, V> {
+public class FileKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 
 	private Transformer<K, File> mKeyTransformer;
 	private StreamTransformer<V> mValueTransformer;
 
-	public FileKVStoreContext(Transformer<K, File> fileNameTansformer, StreamTransformer<V> valueTransformer) {
+	public FileKVStoreContext(
+			FileKVStore<K, V> parent,
+			ReadWriteLock lock,
+			Transformer<K, File> fileNameTansformer,
+			StreamTransformer<V> valueTransformer) {
+		super(parent, lock);
 		mKeyTransformer = fileNameTansformer;
 		mValueTransformer = valueTransformer;
 	}
 
-	public V get(K key) throws IOException {
+	protected void doRemove(K key) throws IOException {
+		File file = mKeyTransformer.transformTo(key);
+		file.delete();
+	}
+
+	@Override
+	protected V doGet(K key) throws IOException {
 		File file = mKeyTransformer.transformTo(key);
 		long len = file.length();
 		FileInputStream fis = null;
@@ -36,7 +48,8 @@ public class FileKVStoreContext<K, V> implements KVStoreContext<K, V> {
 		}
 	}
 
-	public void put(K key, V value) throws IOException {
+	@Override
+	protected void doPut(K key, V value) throws IOException {
 		File file = mKeyTransformer.transformTo(key);
 		File tmpFile = File.createTempFile("kvstore", "tmp", file.getParentFile());
 		FileOutputStream fos = new FileOutputStream(tmpFile);
@@ -66,10 +79,4 @@ public class FileKVStoreContext<K, V> implements KVStoreContext<K, V> {
 		tmpFile.delete();
 		throw new IOException("Unable to rename " + tmpFile + " to " + file);
 	}
-
-	public void remove(K key) {
-		File file = mKeyTransformer.transformTo(key);
-		file.delete();
-	}
-
 }

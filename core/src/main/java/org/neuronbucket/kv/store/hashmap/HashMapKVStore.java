@@ -2,28 +2,21 @@ package org.neuronbucket.kv.store.hashmap;
 
 import java.util.HashMap;
 
-import org.neuronbucket.kv.KVStore;
+import org.neuronbucket.kv.AbstractKVStore;
 import org.neuronbucket.kv.KVStoreContext;
 
-public class HashMapKVStore<K, V> implements KVStore<K, V> {
+public class HashMapKVStore<K, V> extends AbstractKVStore<K, V> {
 
-	private HashMap<K, V> store;
+	private HashMap<K, V> mStore;
 	private HashMapKVStoreContext<K, V> mContext;
 
 	public HashMapKVStore() {
-		store = new HashMap<K, V>();
-		mContext = new HashMapKVStoreContext<K, V>(store);
+		mStore = new HashMap<K, V>();
+		mContext = new HashMapKVStoreContext<K, V>(this, mLock, mStore);
 	}
 
-	public V get(K key) {
-		return store.get(key);
-	}
-
-	public void put(K key, V value) {
-		store.put(key, value);
-	}
-
-	public KVStoreContext<K, V> newContext() {
+	@Override
+	protected KVStoreContext<K, V> doNewContext() {
 		return mContext;
 	}
 
