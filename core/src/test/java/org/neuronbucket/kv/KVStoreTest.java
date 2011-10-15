@@ -133,6 +133,29 @@ public abstract class KVStoreTest<T extends KVStore<String, byte[]>> {
 	}
 
 	@Test
+	public void testClose() throws IOException {
+		// Put a value in the first store and close it
+		KVStoreContext<String, byte[]> context = mStore.newContext();
+		context.put("a", "a".getBytes());
+		mStore.close();
+
+		// Open a second store and make sure the value is still there
+		T store2 = createStore();
+		context = store2.newContext();
+		assertTrue(Arrays.equals("a".getBytes(), context.get("a")));
+		store2.close();
+	}
+
+	@Test
+	public void testFlush() throws IOException {
+		KVStoreContext<String, byte[]> context = mStore.newContext();
+		context.put("a", "a".getBytes());
+		mStore.flush();
+
+		assertTrue(Arrays.equals("a".getBytes(), context.get("a")));
+	}
+
+	@Test
 	public void testIsClosed() throws IOException {
 		assertFalse(mStore.isClosed());
 		mStore.close();

@@ -20,4 +20,7 @@ public class HashMapKVStore<K, V> extends AbstractKVStore<K, V> {
 		return mContext;
 	}
 
+	public void flush() {
+	}
+
 }

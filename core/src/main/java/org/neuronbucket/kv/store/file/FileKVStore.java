@@ -32,4 +32,7 @@ public class FileKVStore<K, V> extends AbstractKVStore<K, V> {
 				mValueTransformer.newInstance());
 	}
 
+	public void flush() {
+	}
+
 }

@@ -10,4 +10,6 @@ public interface KVStore<K, V> {
 
 	public boolean isClosed();
 
+	public void flush() throws IOException;
+
 }
