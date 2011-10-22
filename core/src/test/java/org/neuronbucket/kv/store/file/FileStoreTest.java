@@ -18,7 +18,6 @@ public class FileStoreTest extends KVStoreTest<FileKVStore<String, byte[]>> {
 	@Override
 	public FileKVStore<String, byte[]> createStore() {
 		mBaseDir = new File("tmp");
-		recursiveDelete(mBaseDir);
 		mBaseDir.mkdirs();
 
 		Factory<Transformer<String, File>> keyFactory = new SingletonFactory<Transformer<String, File>>(

@@ -11,7 +11,11 @@ public class HashMapKVStore<K, V> extends AbstractKVStore<K, V> {
 	private HashMapKVStoreContext<K, V> mContext;
 
 	public HashMapKVStore() {
-		mStore = new HashMap<K, V>();
+		this(new HashMap<K, V>());
+	}
+
+	public HashMapKVStore(HashMap<K, V> store) {
+		mStore = store;
 		mContext = new HashMapKVStoreContext<K, V>(this, mLock, mStore);
 	}
 
