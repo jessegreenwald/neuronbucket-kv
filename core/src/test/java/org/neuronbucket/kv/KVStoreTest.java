@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
@@ -67,6 +69,18 @@ public abstract class KVStoreTest<T extends KVStore<String, byte[]>> {
 		mStore.newContext().put("test", val);
 		val2 = mStore.newContext().get("test");
 		assertTrue(Arrays.equals(val, val2));
+	}
+
+	@Test
+	public void testPutAll() throws IOException {
+		Map<String, byte[]> map = new HashMap<String, byte[]>();
+		for (int i = 0; i < 100; i++) {
+			map.put(Integer.toString(i), new byte[] { (byte) i });
+		}
+		mStore.newContext().putAll(map);
+		for (String k : map.keySet()) {
+			assertTrue(Arrays.equals(map.get(k), mStore.newContext().get(k)));
+		}
 	}
 
 	private class MultiThread extends Thread {

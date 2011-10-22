@@ -18,10 +18,14 @@ public abstract class AbstractKVStore<K, V> implements KVStore<K, V> {
 		mLock.writeLock().lock();
 		try {
 			checkClosed();
+			doClose();
 			mClosed.set(true);
 		} finally {
 			mLock.writeLock().unlock();
 		}
+	}
+
+	protected void doClose() throws IOException {
 	}
 
 	public boolean isClosed() {
@@ -44,6 +48,19 @@ public abstract class AbstractKVStore<K, V> implements KVStore<K, V> {
 		if (isClosed()) {
 			throw new StoreClosedException();
 		}
+	}
+
+	public void flush() throws IOException {
+		mLock.readLock().lock();
+		try {
+			checkClosed();
+			doFlush();
+		} finally {
+			mLock.readLock().unlock();
+		}
+	}
+
+	protected void doFlush() throws IOException {
 	}
 
 }

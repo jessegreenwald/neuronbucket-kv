@@ -1,6 +1,7 @@
 package org.neuronbucket.kv;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
 public abstract class AbstractKVStoreContext<K, V> implements KVStoreContext<K, V> {
@@ -30,6 +31,7 @@ public abstract class AbstractKVStoreContext<K, V> implements KVStoreContext<K, 
 		try {
 			checkClosed();
 			doPut(key, value);
+			mParent.flush();
 		} finally {
 			mLock.readLock().unlock();
 		}
@@ -42,12 +44,30 @@ public abstract class AbstractKVStoreContext<K, V> implements KVStoreContext<K, 
 		try {
 			checkClosed();
 			doRemove(key);
+			mParent.flush();
 		} finally {
 			mLock.readLock().unlock();
 		}
 	}
 
 	protected abstract void doRemove(K key) throws IOException;
+
+	public void putAll(Map<K, V> values) throws IOException {
+		mLock.readLock().lock();
+		try {
+			checkClosed();
+			doPutAll(values);
+			mParent.flush();
+		} finally {
+			mLock.readLock().unlock();
+		}
+	}
+
+	protected void doPutAll(Map<K, V> values) throws IOException {
+		for (K k : values.keySet()) {
+			doPut(k, values.get(k));
+		}
+	}
 
 	protected void checkClosed() throws IOException {
 		if (mParent.isClosed()) {
