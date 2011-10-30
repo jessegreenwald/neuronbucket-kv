@@ -51,6 +51,7 @@ public class FileKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 	@Override
 	protected void doPut(K key, V value) throws IOException {
 		File file = mKeyTransformer.transformTo(key);
+		file.getParentFile().mkdirs();
 		File tmpFile = File.createTempFile("kvstore", "tmp", file.getParentFile());
 		FileOutputStream fos = new FileOutputStream(tmpFile);
 		try {

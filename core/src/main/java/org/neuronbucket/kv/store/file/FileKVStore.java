@@ -12,13 +12,19 @@ import org.neuronbucket.kv.util.Transformer;
 
 public class FileKVStore<K, V> extends AbstractKVStore<K, V> {
 
-	private Factory<Transformer<K, File>> mKeyTransformer;
-	private Factory<StreamTransformer<V>> mValueTransformer;
+	public static <K, V> FileKVStore<K, V> newInstance(
+			Factory<? extends Transformer<K, File>> fileNameTransformer,
+			Factory<? extends StreamTransformer<V>> valueTransformer) {
+		return new FileKVStore<K, V>(fileNameTransformer, valueTransformer);
+	}
+
+	private Factory<? extends Transformer<K, File>> mKeyTransformer;
+	private Factory<? extends StreamTransformer<V>> mValueTransformer;
 	private ReadWriteLock mLock = new ReentrantReadWriteLock();
 
 	public FileKVStore(
-			Factory<Transformer<K, File>> fileNameTansformer,
-			Factory<StreamTransformer<V>> valueTransformer) {
+			Factory<? extends Transformer<K, File>> fileNameTansformer,
+			Factory<? extends StreamTransformer<V>> valueTransformer) {
 		mKeyTransformer = fileNameTansformer;
 		mValueTransformer = valueTransformer;
 	}
