@@ -9,7 +9,7 @@ class HashMapKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 
 	private HashMap<K, V> mStore;
 
-	public HashMapKVStoreContext(HashMapKVStore<K, V> parent, ReadWriteLock lock, HashMap<K, V> store) {
+	HashMapKVStoreContext(HashMapKVStore<K, V> parent, ReadWriteLock lock, HashMap<K, V> store) {
 		super(parent, lock);
 		mStore = store;
 	}

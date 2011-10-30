@@ -23,10 +23,11 @@ public class JDBM2StoreTest extends KVStoreTest<JDBM2KVStore<String, byte[]>> {
 			}
 		};
 		Factory<Transformer<String, Comparable<?>>> keyTransformerFactory =
-				new SingletonFactory<Transformer<String, Comparable<?>>>(keyTransformer);
+				SingletonFactory.newInstance(keyTransformer);
+		Transformer<byte[], byte[]> valueTransformer = IdentityTransformer.newInstance();
 		Factory<Transformer<byte[], byte[]>> valueTransformerFactory = 
-				new SingletonFactory<Transformer<byte[], byte[]>>(new IdentityTransformer<byte[]>());
-		return new JDBM2KVStore<String, byte[]>(
+				SingletonFactory.newInstance(valueTransformer);
+		return JDBM2KVStore.newInstance(
 				keyTransformerFactory,
 				valueTransformerFactory,
 				RECORD_MANAGER_NAME, "test");

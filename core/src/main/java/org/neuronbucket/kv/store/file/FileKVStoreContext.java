@@ -11,12 +11,12 @@ import org.neuronbucket.kv.AbstractKVStoreContext;
 import org.neuronbucket.kv.util.StreamTransformer;
 import org.neuronbucket.kv.util.Transformer;
 
-public class FileKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
+class FileKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 
 	private Transformer<K, File> mKeyTransformer;
 	private StreamTransformer<V> mValueTransformer;
 
-	public FileKVStoreContext(
+	FileKVStoreContext(
 			FileKVStore<K, V> parent,
 			ReadWriteLock lock,
 			Transformer<K, File> fileNameTansformer,

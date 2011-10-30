@@ -22,7 +22,7 @@ public class FileKVStore<K, V> extends AbstractKVStore<K, V> {
 	private Factory<? extends StreamTransformer<V>> mValueTransformer;
 	private ReadWriteLock mLock = new ReentrantReadWriteLock();
 
-	public FileKVStore(
+	private FileKVStore(
 			Factory<? extends Transformer<K, File>> fileNameTansformer,
 			Factory<? extends StreamTransformer<V>> valueTransformer) {
 		mKeyTransformer = fileNameTansformer;

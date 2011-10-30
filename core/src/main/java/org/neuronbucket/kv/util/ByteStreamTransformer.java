@@ -8,6 +8,12 @@ import java.io.OutputStream;
 
 public class ByteStreamTransformer implements StreamTransformer<byte[]> {
 
+	public static final Factory<ByteStreamTransformer> FACTORY =
+			new Factory<ByteStreamTransformer>() {
+				public ByteStreamTransformer newInstance() {
+					return new ByteStreamTransformer();
+				}
+	};
 	byte[] buffer = new byte[1024];
 
 	public void write(byte[] t, OutputStream out) throws IOException {

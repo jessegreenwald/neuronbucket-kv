@@ -4,9 +4,17 @@ import java.io.File;
 
 public class StringToFileTransformer implements Transformer<String, File> {
 
+	public static Factory<StringToFileTransformer> createFactory(final File baseDir) {
+		return new Factory<StringToFileTransformer>() {
+			public StringToFileTransformer newInstance() {
+				return new StringToFileTransformer(baseDir);
+			}
+		};
+	};
+
 	private File mBaseDir;
 
-	public StringToFileTransformer(File baseDir) {
+	private StringToFileTransformer(File baseDir) {
 		mBaseDir = baseDir;
 	}
 

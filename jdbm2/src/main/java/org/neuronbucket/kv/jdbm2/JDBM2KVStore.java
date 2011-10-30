@@ -13,14 +13,21 @@ import org.neuronbucket.kv.util.Transformer;
 
 public class JDBM2KVStore<K, V> extends AbstractKVStore<K, V> {
 
+	public static <K, V> JDBM2KVStore<K, V> newInstance(
+			Factory<? extends Transformer<K, Comparable<?>>> keyFactory,
+			Factory<? extends Transformer<V, byte[]>> valueTransformer,
+			String recordManagerName, String treeMapName) throws IOException {
+		return new JDBM2KVStore<K, V>(keyFactory, valueTransformer, recordManagerName, treeMapName);
+	}
+
 	PrimaryTreeMap<Comparable<?>, byte[]> mTreeMap;
-	private Factory<Transformer<K, Comparable<?>>> mKeyFactory;
-	private Factory<Transformer<V, byte[]>> mValueFactory;
+	private Factory<? extends Transformer<K, Comparable<?>>> mKeyFactory;
+	private Factory<? extends Transformer<V, byte[]>> mValueFactory;
 	private RecordManager mRecMan;
 
-	public JDBM2KVStore(
-			Factory<Transformer<K, Comparable<?>>> keyFactory,
-			Factory<Transformer<V, byte[]>> valueFactory,
+	private JDBM2KVStore(
+			Factory<? extends Transformer<K, Comparable<?>>> keyFactory,
+			Factory<? extends Transformer<V, byte[]>> valueFactory,
 			String recordManagerName,
 			String treeMapName) throws IOException {
 		mKeyFactory = keyFactory;
