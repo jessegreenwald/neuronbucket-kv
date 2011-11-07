@@ -53,8 +53,9 @@ class FileKVStoreContext<K, V> extends AbstractKVStoreContext<K, V> {
 		File file = mKeyTransformer.transformTo(key);
 		file.getParentFile().mkdirs();
 		File tmpFile = File.createTempFile("kvstore", "tmp", file.getParentFile());
-		FileOutputStream fos = new FileOutputStream(tmpFile);
+		FileOutputStream fos = null;
 		try {
+			fos = new FileOutputStream(tmpFile);
 			mValueTransformer.write(value, fos);
 		} finally {
 			fos.close();
